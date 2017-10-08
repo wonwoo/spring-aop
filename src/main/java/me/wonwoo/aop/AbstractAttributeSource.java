@@ -4,6 +4,8 @@ import org.springframework.core.BridgeMethodResolver;
 import org.springframework.core.MethodClassKey;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.annotation.AnnotationAttributes;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.util.ClassUtils;
 
 import java.lang.annotation.Annotation;
@@ -22,6 +24,7 @@ public abstract class AbstractAttributeSource implements AttributeSource {
       new ConcurrentHashMap<>(1024);
 
   @Override
+  @Nullable
   public Object getAttribute(Method method, Class<?> targetClass) {
     Object cacheKey = getCacheKey(method, targetClass);
     Object attribute = attributeCache.get(cacheKey);
@@ -36,6 +39,7 @@ public abstract class AbstractAttributeSource implements AttributeSource {
     return null;
   }
 
+  @Nullable
   protected Object computeAttribute(Method method, Class<?> targetClass) {
     if (!Modifier.isPublic(method.getModifiers())) {
       return null;
@@ -58,6 +62,7 @@ public abstract class AbstractAttributeSource implements AttributeSource {
     return new MethodClassKey(method, targetClass);
   }
 
+  @Nullable
   protected Object determineAnnotatedElement(AnnotatedElement ae) {
     if (ae.getAnnotations().length > 0) {
       Class<? extends Annotation> annotation = getAnnotation();
@@ -72,8 +77,10 @@ public abstract class AbstractAttributeSource implements AttributeSource {
     return null;
   }
 
+  @NonNull
   protected abstract Object parseAnnotation(AnnotationAttributes annotationAttributes);
 
+  @NonNull
   protected abstract Class<? extends Annotation> getAnnotation();
 
 }
