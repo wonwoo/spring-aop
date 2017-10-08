@@ -8,14 +8,13 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 @SpringJUnitConfig(SpringAopApplication.class)
 class SpringAopApplicationTests {
 
 	private final HelloService service;
 
 	@Autowired
-	SpringAopApplicationTests(HelloService service) {
+	private SpringAopApplicationTests(HelloService service) {
 		this.service = service;
 	}
 
