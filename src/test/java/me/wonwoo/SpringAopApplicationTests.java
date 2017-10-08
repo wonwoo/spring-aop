@@ -1,27 +1,33 @@
 package me.wonwoo;
 
 import me.wonwoo.sample.service.HelloService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-@RunWith(SpringRunner.class)
-@ContextConfiguration(classes = SpringAopApplication.class)
-public class SpringAopApplicationTests {
+import static org.assertj.core.api.Assertions.assertThat;
+
+
+@SpringJUnitConfig(SpringAopApplication.class)
+class SpringAopApplicationTests {
+
+	private final HelloService service;
 
 	@Autowired
-	private HelloService service;
-
-
-	@Test
-	public void contextLoads() {
-		System.out.println(service.hello());;
-
-
+	SpringAopApplicationTests(HelloService service) {
+		this.service = service;
 	}
 
+	@Test
+	@DisplayName("😎")
+	void methodInjection(@Autowired HelloService service) {
+		assertThat(service.hello()).isEqualTo("hello world");
+	}
+
+	@Test
+	@DisplayName("🤓")
+	void constructorInjection() {
+		assertThat(service.hello()).isEqualTo("hello world");
+	}
 }
