@@ -7,7 +7,7 @@ import org.springframework.aop.support.AopUtils;
 /**
  * Created by wonwoolee on 2017. 10. 6..
  */
-public abstract class AnnotationProxyInterceptor implements MethodInterceptor {
+public abstract class AnnotationProxyInterceptor<T> implements MethodInterceptor {
 
   private final AttributeSource attributeSource;
 
@@ -16,12 +16,13 @@ public abstract class AnnotationProxyInterceptor implements MethodInterceptor {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public Object invoke(MethodInvocation invocation) throws Throwable {
     Class<?> targetClass = (invocation.getThis() != null ? AopUtils.getTargetClass(invocation.getThis()) : null);
-    Object attr = attributeSource.getAttribute(invocation.getMethod(), targetClass);
+    T attr = (T) attributeSource.getAttribute(invocation.getMethod(), targetClass);
     return invoke(invocation, attr);
   }
 
-  public abstract Object invoke(MethodInvocation invocation, Object attr) throws Throwable;
+  public abstract Object invoke(MethodInvocation invocation, T attr) throws Throwable;
 }
 

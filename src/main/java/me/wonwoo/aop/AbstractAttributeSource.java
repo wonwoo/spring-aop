@@ -1,5 +1,12 @@
 package me.wonwoo.aop;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.springframework.core.BridgeMethodResolver;
 import org.springframework.core.MethodClassKey;
 import org.springframework.core.annotation.AnnotatedElementUtils;
@@ -8,25 +15,18 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ClassUtils;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
  * Created by wonwoolee on 2017. 10. 5..
  */
 public abstract class AbstractAttributeSource implements AttributeSource {
 
-  private final Map<Object, Object> attributeCache =
+  private final Map<MethodClassKey, Object> attributeCache =
       new ConcurrentHashMap<>(1024);
 
   @Override
   @Nullable
   public Object getAttribute(Method method, Class<?> targetClass) {
-    Object cacheKey = getCacheKey(method, targetClass);
+    MethodClassKey cacheKey = getCacheKey(method, targetClass);
     Object attribute = attributeCache.get(cacheKey);
     if (attribute != null) {
       return attribute;
@@ -58,7 +58,7 @@ public abstract class AbstractAttributeSource implements AttributeSource {
     return null;
   }
 
-  private Object getCacheKey(Method method, Class<?> targetClass) {
+  private MethodClassKey getCacheKey(Method method, Class<?> targetClass) {
     return new MethodClassKey(method, targetClass);
   }
 
